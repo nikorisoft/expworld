@@ -2,7 +2,10 @@
 .ew-root
     .uk-margin
         .uk-container.uk-container-xlarge
-            h1 Experience Points in the World
+            .uk-flex.uk-flex-between.uk-flex-bottom.uk-margin-bottom
+                h1.uk-margin-remove Experience Points in the World
+                .exp.uk-text-large {{totalPoints}} / {{maximumPoints}} points
+
             router-view(v-model:data="userData")
 
             .uk-card.uk-card-default.uk-card-body.uk-card-small.uk-margin-top
@@ -35,7 +38,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
-import { createNewUserData } from "../data/exp";
+import { createNewUserData, ExpState } from "../data/exp";
 
 import UIkit from "uikit";
 import Icons from "uikit/dist/js/uikit-icons";
@@ -43,10 +46,23 @@ import Icons from "uikit/dist/js/uikit-icons";
 UIkit.use(Icons);
 
 export default defineComponent({
+    computed: {
+        totalPoints(): number {
+            let total = 0;
+            for (const code in this.userData.countries) {
+                const c = this.userData.countries[code];
+                total += c.state;
+            }
+
+            return total;
+        }
+    },
+
     setup() {
         const userData = ref(createNewUserData());
 
         return {
+            maximumPoints: Object.keys(userData.value.countries).length * ExpState.Lived,
             userData
         }
     }

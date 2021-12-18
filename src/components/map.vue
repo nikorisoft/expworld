@@ -56,7 +56,7 @@ export default defineComponent({
     },
 
     mounted() {
-        const map = L.map("leaflet-container").setView([0, 0], 2);
+        const map = L.map("leaflet-container").setView([0, 0], 3);
         const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         });
@@ -122,7 +122,7 @@ export default defineComponent({
 
 <style lang="css">
 .leaflet-container {
-    width: 80%;
+    width: 100%;
     height: 60vh;
 }
 </style>

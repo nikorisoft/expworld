@@ -1,7 +1,7 @@
 <template lang="pug">
 .countries
-    h2 Countries
-    leaflet-map(:data="data", @clicked="onCountryClicked")
+    .uk-container.uk-container-large
+        leaflet-map(:data="data", @clicked="onCountryClicked")
 
     .uk-margin.uk-container.uk-container-large
         .uk-inline

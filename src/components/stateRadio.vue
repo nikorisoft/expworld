@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 import { ExpState, ExpStateString } from "../data/exp";
 
 export default defineComponent({
