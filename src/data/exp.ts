@@ -43,11 +43,32 @@ export function createNewUserData(): UserData {
     };
 
     for (const code in countryData) {
-        data.countries[code] = {
-            state: ExpState.None,
-            subregions: {}
-        };
+        data.countries[code] = createEmptyCountryState();
     }
 
     return data;
+}
+
+export function createEmptyCountryState(): UserCountryState {
+    return {
+        state: ExpState.None,
+        subregions: {}
+    };
+}
+
+export function validateCountryState(cs: UserCountryState): UserCountryState {
+    const newState: UserCountryState = createEmptyCountryState();
+
+    if (cs != null) {
+        if (cs.state != null) {
+            if (typeof(cs.state) === "number" && cs.state >= ExpState.None && cs.state <= ExpState.Lived) {
+                newState.state = cs.state;
+            }
+        }
+        if (cs.subregions != null) {
+            newState.subregions = cs.subregions;
+        }
+    }
+
+    return newState;
 }

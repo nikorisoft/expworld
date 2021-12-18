@@ -4,7 +4,9 @@
         .uk-container.uk-container-xlarge
             .uk-flex.uk-flex-between.uk-flex-bottom.uk-margin-bottom
                 h1.uk-margin-remove Experience Points in the World
-                .exp.uk-text-large {{totalPoints}} / {{maximumPoints}} points
+                .uk-flex
+                    .exp.uk-text-large {{totalPoints}} / {{maximumPoints}} points
+                    button.uk-button.uk-button-default.uk-margin-left(type="button", @click="saveToLocal") Save
 
             router-view(v-model:data="userData")
 
@@ -37,8 +39,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, ref } from "vue";
 import { createNewUserData, ExpState } from "../data/exp";
+import { loadFromLocalStorage, saveToLocalStorage } from "../data/save";
 
 import UIkit from "uikit";
 import Icons from "uikit/dist/js/uikit-icons";
@@ -59,11 +62,20 @@ export default defineComponent({
     },
 
     setup() {
-        const userData = ref(createNewUserData());
+        let data = loadFromLocalStorage();
+
+        if (data == null) {
+            data = createNewUserData();
+        }
+
+        const userData = ref(data);
 
         return {
             maximumPoints: Object.keys(userData.value.countries).length * ExpState.Lived,
-            userData
+            userData,
+            saveToLocal() {
+                saveToLocalStorage(userData.value);
+            }
         }
     }
 });
