@@ -9,6 +9,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import rootComponent from "./components/root.vue";
 import countryViewComponent from "./components/countryView.vue";
 import subcountryViewComponent from "./components/subcountryView.vue";
+import mapComponent from "./components/map.vue";
 
 console.debug("expworld UI started.");
 
@@ -24,4 +25,5 @@ const router = createRouter({
 
 const app = createApp(rootComponent);
 app.use(router);
+app.component("leaflet-map", mapComponent);
 app.mount("#app");
