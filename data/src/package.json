@@ -1,0 +1,15 @@
+{
+  "name": "@expworld/data-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "iso3166-2-db": "^2.3.10",
+    "mapshaper": "^0.5.79"
+  }
+}

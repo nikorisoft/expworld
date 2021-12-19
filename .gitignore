@@ -1,6 +1,7 @@
 node_modules
-/data/src
 *.js
 !*.config.js
+!/data/src/*.js
 package-lock.json
 /dist
+iso3166*
