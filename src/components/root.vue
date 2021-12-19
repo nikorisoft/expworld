@@ -65,9 +65,9 @@ export default defineComponent({
     },
 
     mounted() {
-        const input = document.getElementById("expworld_file") as HTMLInputElement;
-
         const comp = this;
+
+        const input = document.getElementById("expworld_file") as HTMLInputElement;
         if (input != null) {
             input.addEventListener("change", async function (e) {
                 if (this.files != null) {
@@ -78,6 +78,13 @@ export default defineComponent({
                 }
             });
         }
+
+        window.addEventListener("beforeunload", function (e) {
+            if (comp.anyChanged) {
+                e.preventDefault();
+                e.returnValue = "You have unsaved changes. Do you really want to quit?";
+            }
+        });
     },
 
     setup() {
