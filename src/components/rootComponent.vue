@@ -11,6 +11,7 @@
                         button.uk-button.uk-button-default.uk-margin-small-left.uk-button-small(type="button", @click="download", uk-icon="download")
                         button.uk-button.uk-button-default.uk-margin-small-left.uk-button-small(type="button", @click="upload", uk-icon="upload")
                         input(type="file", style="display: none", id="expworld_file", accept="application/json")
+                        button.uk-button.uk-button-default.uk-margin-small-left.uk-button-small(type="button", @click="getLink", uk-icon="link")
 
                 .exp.uk-text-large.uk-margin-left {{totalPoints}} / {{maximumPoints}} points
 
@@ -50,7 +51,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { createNewUserData, ExpState, UserData } from "../data/exp";
-import { downloadUserData, loadFromLocalStorage, saveToLocalStorage, uploadUserData } from "../data/save";
+import { downloadUserData, exportToBinary, importFromBinary, loadFromLocalStorage, saveToLocalStorage, uploadUserData } from "../data/save";
 
 import UIkit from "uikit";
 import Icons from "uikit/dist/js/uikit-icons";
@@ -98,8 +99,26 @@ export default defineComponent({
     setup() {
         let data = loadFromLocalStorage();
 
+        if (window.location.search != null) {
+            const params = new URLSearchParams(window.location.search);
+
+            const d = params.get("d");
+            if (d != null) {
+                try {
+                    const buffer = Buffer.from(d, "base64");
+
+                    data = importFromBinary(buffer);
+
+                    console.debug("Initial data is originated from the query parameter.", data);
+                } catch (e) {
+                    console.warn("The data specified by the query parameter is invalid");
+                }
+            }
+        }
+
         if (data == null) {
             data = createNewUserData();
+            console.debug("Initial data is empty");
         }
 
         const userData = ref(data);
@@ -128,6 +147,26 @@ export default defineComponent({
                 const input = document.getElementById("expworld_file") as HTMLInputElement;
                 if (input != null) {
                     input.click();
+                }
+            },
+
+            async getLink() {
+                const buffer = exportToBinary(userData.value);
+                const base64str = buffer.toString("base64");
+                const url = window.location;
+                const newUrl = url.protocol + "//" + url.host + url.pathname + "?d=" + base64str;
+
+                try {
+                    await navigator.clipboard.writeText(newUrl);
+                    UIkit.notification({
+                        message: "Successfully copied URL to the clipboard!",
+                        status: "success"
+                    });
+                } catch (e) {
+                    UIkit.notification({
+                        message: "Failed to copy URL to the clipboard...",
+                        status: "danger"
+                    });
                 }
             },
 
