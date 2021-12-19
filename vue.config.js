@@ -2,6 +2,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     outputDir: "./dist",
+    publicPath: "./",
     pages: {
         index: {
             entry: "src/index.ts",
