@@ -1,6 +1,6 @@
 <template lang="pug">
 .map-component
-    .leaflet-container(id="leaflet-container")
+    .leaflet-container(:id="'lc-' + id")
 </template>
 
 <script lang="ts">
@@ -30,13 +30,17 @@ export default defineComponent({
     setup() {
         const featureObjects: { [code: string]: L.GeoJSON } = {};
 
+        const randNum = window.crypto.getRandomValues(new Uint8Array(8));
+        const id = randNum.reduce<string>((prev, currentValue) => prev + currentValue.toString(16), "");
+
         return {
+            id,
             featureObjects
         };
     },
 
     mounted() {
-        const map = L.map("leaflet-container").setView([0, 0], 3);
+        const map = L.map("lc-" + this.id).setView([0, 0], 3);
         const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         });
