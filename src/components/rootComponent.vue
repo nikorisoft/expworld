@@ -5,7 +5,7 @@
             .uk-flex.uk-flex-between.uk-flex-bottom.uk-margin-bottom
                 .uk-flex.uk-flex-bottom
                     h1.uk-margin-remove
-                        router-link(to="/").uk-link-heading Experience Points in the World
+                        router-link(to="/").uk-link-heading Worldwide Experience Points
                     .toolbar.uk-margin-left
                         button.uk-button.uk-button-default.uk-button-small(type="button", @click="saveToLocal", :disabled="!anyChanged") Save
                         button.uk-button.uk-button-default.uk-margin-small-left.uk-button-small(type="button", @click="download", uk-icon="download")

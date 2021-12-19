@@ -1,6 +1,6 @@
-= World-wide Experience Points
+= Worldwide Experience Points
 
-This is a source file for a web site that manages your world-wide experience points.
+This is a source file for a web site that manages your worldwide experience points.
 
 == How to use?
 
