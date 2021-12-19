@@ -120,6 +120,6 @@ export default defineComponent({
 <style lang="css">
 .leaflet-container {
     width: 100%;
-    height: 60vh;
+    height: 50vh;
 }
 </style>

@@ -3,13 +3,16 @@
     .uk-margin
         .uk-container.uk-container-xlarge
             .uk-flex.uk-flex-between.uk-flex-bottom.uk-margin-bottom
-                h1.uk-margin-remove Experience Points in the World
-                .uk-flex
-                    .exp.uk-text-large {{totalPoints}} / {{maximumPoints}} points
-                    button.uk-button.uk-button-default.uk-margin-left.uk-button-small(type="button", @click="saveToLocal", :disabled="!anyChanged") Save
-                    button.uk-button.uk-button-default.uk-margin-small-left.uk-button-small(type="button", @click="download", uk-icon="download")
-                    button.uk-button.uk-button-default.uk-margin-small-left.uk-button-small(type="button", @click="upload", uk-icon="upload")
-                    input(type="file", style="display: none", id="expworld_file", accept="application/json")
+                .uk-flex.uk-flex-bottom
+                    h1.uk-margin-remove
+                        router-link(to="/").uk-link-heading Experience Points in the World
+                    .toolbar.uk-margin-left
+                        button.uk-button.uk-button-default.uk-button-small(type="button", @click="saveToLocal", :disabled="!anyChanged") Save
+                        button.uk-button.uk-button-default.uk-margin-small-left.uk-button-small(type="button", @click="download", uk-icon="download")
+                        button.uk-button.uk-button-default.uk-margin-small-left.uk-button-small(type="button", @click="upload", uk-icon="upload")
+                        input(type="file", style="display: none", id="expworld_file", accept="application/json")
+
+                .exp.uk-text-large.uk-margin-left {{totalPoints}} / {{maximumPoints}} points
 
             router-view(:data="userData", @update:data="onUpdateData")
 

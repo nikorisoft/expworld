@@ -1,7 +1,7 @@
 <template lang="pug">
 .subareas
-    h2 {{ countryName }}
     .loading(v-if="loading")
+        h2.uk-margin-remove {{ countryName }}
         .uk-container.uk-container-large(style="height: 30vh").uk-flex.uk-flex-center.uk-flex-middle
             .spinner(uk-spinner="ratio: 4")
 
@@ -10,6 +10,10 @@
             p No subregion information for {{countryName}}
 
     .contents(v-if="loading === false && noInformation === false")
+        .uk-flex.uk-flex-between.uk-flex-bottom.uk-margin-bottom
+            h2.uk-margin-remove {{ countryName }}
+            .exp {{totalPoints}} / {{maximumPoints}} points
+
         .uk-container.uk-container-large
             leaflet-map(:data="userData", :featureMap="featureMap", @clicked="onMapSelected")
 
@@ -82,6 +86,19 @@ export default defineComponent({
             }
             console.log(stateData);
             return stateData;
+        },
+
+        totalPoints() {
+            let total = 0;
+            for (const code in this.userData) {
+                total += this.userData[code].state;
+            }
+
+            return total;
+        },
+
+        maximumPoints() {
+            return this.subregions.length * ExpState.Lived;
         }
     },
 
