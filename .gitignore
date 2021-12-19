@@ -6,4 +6,7 @@ package-lock.json
 /dist
 
 iso3166*
-/src/assets
+/src/assets/*.geojson
+/src/assets/geojson/*
+/src/assets/subregions/*
+!/src/assets/*/README.md
