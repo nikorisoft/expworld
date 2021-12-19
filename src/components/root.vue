@@ -6,9 +6,12 @@
                 h1.uk-margin-remove Experience Points in the World
                 .uk-flex
                     .exp.uk-text-large {{totalPoints}} / {{maximumPoints}} points
-                    button.uk-button.uk-button-default.uk-margin-left(type="button", @click="saveToLocal") Save
+                    button.uk-button.uk-button-default.uk-margin-left.uk-button-small(type="button", @click="saveToLocal", :disabled="!anyChanged") Save
+                    button.uk-button.uk-button-default.uk-margin-small-left.uk-button-small(type="button", @click="download", uk-icon="download")
+                    button.uk-button.uk-button-default.uk-margin-small-left.uk-button-small(type="button", @click="upload", uk-icon="upload")
+                    input(type="file", style="display: none", id="expworld_file", accept="application/json")
 
-            router-view(v-model:data="userData")
+            router-view(:data="userData", @update:data="onUpdateData")
 
             .uk-card.uk-card-default.uk-card-body.uk-card-small.uk-margin-top
                 h3.uk-card-title Data source
@@ -40,8 +43,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { createNewUserData, ExpState } from "../data/exp";
-import { loadFromLocalStorage, saveToLocalStorage } from "../data/save";
+import { createNewUserData, ExpState, UserData } from "../data/exp";
+import { downloadUserData, loadFromLocalStorage, saveToLocalStorage, uploadUserData } from "../data/save";
 
 import UIkit from "uikit";
 import Icons from "uikit/dist/js/uikit-icons";
@@ -61,6 +64,22 @@ export default defineComponent({
         }
     },
 
+    mounted() {
+        const input = document.getElementById("expworld_file") as HTMLInputElement;
+
+        const comp = this;
+        if (input != null) {
+            input.addEventListener("change", async function (e) {
+                if (this.files != null) {
+                    const userData = await uploadUserData(this.files);
+                    if (userData != null) {
+                        comp.userData = userData;
+                    }
+                }
+            });
+        }
+    },
+
     setup() {
         let data = loadFromLocalStorage();
 
@@ -69,12 +88,32 @@ export default defineComponent({
         }
 
         const userData = ref(data);
+        const anyChanged = ref(false);
 
         return {
+            anyChanged,
             maximumPoints: Object.keys(userData.value.countries).length * ExpState.Lived,
             userData,
+
             saveToLocal() {
                 saveToLocalStorage(userData.value);
+                anyChanged.value = false;
+            },
+
+            onUpdateData(data: UserData) {
+                userData.value = data;
+                anyChanged.value = true;
+            },
+
+            download() {
+                downloadUserData(userData.value);
+            },
+
+            upload() {
+                const input = document.getElementById("expworld_file") as HTMLInputElement;
+                if (input != null) {
+                    input.click();
+                }
             }
         }
     }
