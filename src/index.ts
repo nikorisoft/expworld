@@ -6,10 +6,10 @@
 import { createApp } from "vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import rootComponent from "./components/root.vue";
+import rootComponent from "./components/rootComponent.vue";
 import countryViewComponent from "./components/countryView.vue";
 import subcountryViewComponent from "./components/subcountryView.vue";
-import mapComponent from "./components/map.vue";
+import mapComponent from "./components/leafletMap.vue";
 
 console.debug("expworld UI started.");
 

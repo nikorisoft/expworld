@@ -1,5 +1,5 @@
 <template lang="pug">
-.map
+.map-component
     .leaflet-container(id="leaflet-container")
 </template>
 
@@ -8,7 +8,7 @@ import { Feature, FeatureCollection } from "geojson";
 import L from "leaflet";
 import { defineComponent } from "vue";
 
-import { ExpStateString, UserData, UserGeoStateMap } from "../data/exp";
+import { ExpStateString, UserGeoStateMap } from "../data/exp";
 import { CodeFeatureMap } from "../data/geo";
 
 const styles: L.PathOptions[] = [
@@ -19,7 +19,6 @@ const styles: L.PathOptions[] = [
     { color: "#aaa", fillColor: "#f33", fillOpacity: 0.5 }, // Stayed
     { color: "#aaa", fillColor: "#f3f", fillOpacity: 0.5 }, // Lived
 ];
-
 
 export default defineComponent({
     props: {
@@ -59,7 +58,7 @@ export default defineComponent({
 
         for (const code in featureMap) {
             const feature = L.geoJSON(featureMap[code].feature);
-            feature.bindPopup((l) => {
+            feature.bindPopup(() => {
                 const data = this.data as UserGeoStateMap;
 
                 if (data != null && data[code] != null) {

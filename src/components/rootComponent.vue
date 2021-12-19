@@ -40,8 +40,11 @@
 
                 h3.uk-card-title Acknowledgements
 
-                p The original idea "experience points for prefectures" (Keiken-chi) was proposed and implemented by&nbsp;
+                p The original idea "experience points for prefectures" (Keiken-chi) was presented and implemented by&nbsp;
                     a(href="https://uub.jp/kkn/") M. Higashide.
+
+    footer.uk-margin-auto-top
+        p.uk-text-small.uk-text-muted.uk-text-center Copyright &copy; {{copyrightYear}} nikorisoft - Ver.{{copyrightVersion}}
 </template>
 
 <script lang="ts">
@@ -68,11 +71,13 @@ export default defineComponent({
     },
 
     mounted() {
+        // Probably this aliasing should be revisited later..
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const comp = this;
 
         const input = document.getElementById("expworld_file") as HTMLInputElement;
         if (input != null) {
-            input.addEventListener("change", async function (e) {
+            input.addEventListener("change", async function () {
                 if (this.files != null) {
                     const userData = await uploadUserData(this.files);
                     if (userData != null) {
@@ -124,7 +129,10 @@ export default defineComponent({
                 if (input != null) {
                     input.click();
                 }
-            }
+            },
+
+            copyrightYear: "2021",
+            copyrightVersion: "0.1.0"
         }
     }
 });

@@ -7,7 +7,7 @@ export enum ExpState {
     Visited = 3,
     Stayed = 4,
     Lived = 5
-};
+}
 
 export const ExpStateString = [
     "No Status",
@@ -24,8 +24,7 @@ export interface UserGeoState {
     state: ExpState;
 }
 
-export interface UserSubregionState extends UserGeoState {
-}
+export type UserSubregionState = UserGeoState
 
 export interface UserCountryState extends UserGeoState {
     subregions: {

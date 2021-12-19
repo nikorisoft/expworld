@@ -229,7 +229,7 @@ export default defineComponent({
     },
 
     watch: {
-        $route(to, from) {
+        $route() {
             this.reloadChange();
         }
     }
