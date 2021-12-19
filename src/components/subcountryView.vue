@@ -152,7 +152,7 @@ export default defineComponent({
                 selected.value = "";
 
                 // Dynamically load data
-                const infoResponse = await fetch("/assets/subregions/" + cc + ".json");
+                const infoResponse = await fetch("./assets/subregions/" + cc + ".json");
                 if (!infoResponse.ok) {
                     console.error("Cannot retrieve subregion information for %s", countryName);
 
@@ -165,7 +165,7 @@ export default defineComponent({
                 const info: ISO3166_2_Data[] = await infoResponse.json();
                 subregions.value = info.sort((a, b) => (a.iso).localeCompare(b.iso));
 
-                const geoResponse = await fetch("/assets/geojson/" + cc + ".geojson");
+                const geoResponse = await fetch("./assets/geojson/" + cc + ".geojson");
                 if (!geoResponse.ok) {
                     const countryFeature = getCountryFeature(cc);
 
