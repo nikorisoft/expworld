@@ -18,12 +18,16 @@ export const ExpStateString = [
     "Lived"
 ];
 
-export interface UserSubregionState {
+export type UserGeoStateMap = { [code: string]: UserGeoState };
+
+export interface UserGeoState {
     state: ExpState;
 }
 
-export interface UserCountryState {
-    state: ExpState;
+export interface UserSubregionState extends UserGeoState {
+}
+
+export interface UserCountryState extends UserGeoState {
     subregions: {
         [subregionCode: string]: UserSubregionState
     };

@@ -4,13 +4,12 @@
 </template>
 
 <script lang="ts">
-import { Feature } from "geojson";
+import { Feature, FeatureCollection } from "geojson";
 import L from "leaflet";
-import { defineComponent, markRaw } from "vue";
+import { defineComponent } from "vue";
 
-import firstLevelGeoJson from "../assets/3166-1.geojson";
-import { countryData } from "../data/area";
-import { ExpStateString, UserData } from "../data/exp";
+import { ExpStateString, UserData, UserGeoStateMap } from "../data/exp";
+import { CodeFeatureMap } from "../data/geo";
 
 const styles: L.PathOptions[] = [
     { color: "#aaa", fillColor: "#fff", fillOpacity: 0.3 }, // None
@@ -24,34 +23,16 @@ const styles: L.PathOptions[] = [
 
 export default defineComponent({
     props: {
-        data: Object
+        data: Object,
+        featureMap: Object,
+        noAutoFit: Boolean
     },
 
     setup() {
-        const geoJson = markRaw(firstLevelGeoJson);
-        if (geoJson.features == null) {
-            throw new Error("GeoJson data invalid");
-        }
-
-        const countryFeatures: { [countryCode: string]: Feature } = {};
-        const countryFeatureObjects: { [countryCode: string]: L.GeoJSON } = {};
-
-        for (const f of geoJson.features) {
-            if (f != null && f.properties != null && f.properties["ISO3166-1"] != null) {
-                const code = f.properties["ISO3166-1"] as string;
-                if (countryData[code] != null) {
-                    countryFeatures[code] = f;
-                } else {
-                    console.log("Excluding %s", code);
-                }
-            } else {
-                console.log("No ISO3166-1");
-            }
-        }
+        const featureObjects: { [code: string]: L.GeoJSON } = {};
 
         return {
-            countryFeatures,
-            countryFeatureObjects
+            featureObjects
         };
     },
 
@@ -62,17 +43,29 @@ export default defineComponent({
         });
         tileLayer.addTo(map);
 
-        const data = this.data as UserData | null;
+        const data = this.data as UserGeoStateMap;
 
-        for (const code in this.countryFeatures) {
-            const feature = L.geoJSON(this.countryFeatures[code]);
+        const featureMap = this.featureMap as CodeFeatureMap;
+        const features: Feature[] = [];
+        for (const code in featureMap) {
+            features.push(featureMap[code].feature);
+        }
+
+        const featureCollection: FeatureCollection = {
+            type: "FeatureCollection",
+            features
+        };
+        const bounds = L.geoJSON(featureCollection).getBounds();
+
+        for (const code in featureMap) {
+            const feature = L.geoJSON(featureMap[code].feature);
             feature.bindPopup((l) => {
-                const data = this.data as UserData | null;
+                const data = this.data as UserGeoStateMap;
 
-                if (data != null && data.countries[code] != null) {
-                    return `${countryData[code].name} (${ExpStateString[data.countries[code].state]})`;
+                if (data != null && data[code] != null) {
+                    return `${featureMap[code].name} (${ExpStateString[data[code].state]})`;
                 } else {
-                    return `${countryData[code].name}`;
+                    return `${featureMap[code].name}`;
                 }
             });
 
@@ -84,8 +77,8 @@ export default defineComponent({
                 this.$emit("clicked", "");
             });
 
-            if (data != null) {
-                const state = data.countries[code].state;
+            if (data != null && data[code] != null) {
+                const state = data[code].state;
 
                 feature.setStyle(styles[state]);
             } else {
@@ -94,20 +87,24 @@ export default defineComponent({
 
             feature.addTo(map);
 
-            this.countryFeatureObjects[code] = feature;
+            this.featureObjects[code] = feature;
+        }
+        if (this.noAutoFit !== true) {
+            map.fitBounds(bounds);
         }
     },
 
     watch: {
         data: {
             handler() {
-                console.debug("Map: data change detected");
-                const data = this.data as UserData | null;
+                console.debug("Map: data change detected", this.data);
+                const data = this.data as UserGeoStateMap;
 
                 if (data != null) {
-                    for (const code in this.countryFeatures) {
-                        const feature = this.countryFeatureObjects[code];
-                        const state = data.countries[code].state;
+                    for (const code in this.featureMap) {
+                        const feature = this.featureObjects[code];
+                        const state = data[code].state;
+
                         if (feature != null) {
                             feature.setStyle(styles[state]);
                         }

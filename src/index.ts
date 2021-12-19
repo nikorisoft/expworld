@@ -14,7 +14,7 @@ import mapComponent from "./components/map.vue";
 console.debug("expworld UI started.");
 
 const routes = [
-    { path: "/country/:id", component: subcountryViewComponent },
+    { path: "/country/:cc", component: subcountryViewComponent },
     { path: "/", component: countryViewComponent }
 ];
 

@@ -11,5 +11,8 @@
   "dependencies": {
     "iso3166-2-db": "^2.3.10",
     "mapshaper": "^0.5.79"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^10.2.0"
   }
 }

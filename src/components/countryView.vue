@@ -1,7 +1,7 @@
 <template lang="pug">
 .countries
     .uk-container.uk-container-large
-        leaflet-map(:data="data", @clicked="onCountryClicked")
+        leaflet-map(:data="userData", :featureMap="countryFeatureMap", :noAutoFit="true", @clicked="onCountryClicked")
 
     .uk-margin.uk-container.uk-container-large
         .uk-inline
@@ -17,7 +17,8 @@
             tbody
                 tr(v-for="c in countries", v-show="filteredCountries.includes(c)")
                     td {{ c.iso }}
-                    td {{ c.name }}
+                    td
+                        router-link(:to="'/country/' + c.iso") {{ c.name }}
                     td
                         state-radio(:name="c.iso", :modelValue="data.countries[c.iso].state", @update:modelValue="(value) => radioChanged(c.iso, value)")
 </template>
@@ -25,7 +26,8 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { countryData } from "../data/area";
-import { ExpState, ExpStateString } from "../data/exp";
+import { ExpState, ExpStateString, UserData, UserGeoStateMap } from "../data/exp";
+import { countryFeatures } from "../data/geo";
 
 import stateRadioComponent from "./stateRadio.vue";
 
@@ -56,6 +58,20 @@ export default defineComponent({
 
                 return this.countries.filter((c) => c.iso.includes(filterU) || c.name.toUpperCase().includes(filterU));
             }
+        },
+
+        userData() {
+            const data = this.data as UserData | null;
+            const stateData: UserGeoStateMap = {};
+
+            for (const code in countryData) {
+                if (data != null && data.countries[code] != null) {
+                    stateData[code] = data.countries[code];
+                } else {
+                    stateData[code] = { state: ExpState.None };
+                }
+            }
+            return stateData;
         }
     },
 
@@ -77,6 +93,8 @@ export default defineComponent({
             states: ExpStateString,
             filter: ref(""),
             selected,
+            countryFeatureMap: countryFeatures,
+
             radioChanged(code: string, newState: ExpState) {
                 if (props.data != null) {
                     const newData = {
