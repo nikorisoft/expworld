@@ -1,0 +1,16 @@
+= World-wide Experience Points
+
+This is a source file for a web site that manages your world-wide experience points.
+
+== How to use?
+
+Coming soon...
+
+== Author
+
+link:https://github.com/nikorisoft[nikorisoft]
+
+
+== License
+
+link:./LICENSE[Apache 2.0 License]
