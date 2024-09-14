@@ -1,0 +1,40 @@
+name: Publish pages
+
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch map data (source)
+        run: |
+          cd ./data/src
+          curl -OL https://volkerkrause.eu/~vkrause/iso3166-boundaries/iso3166-1-boundaries.shp-2021-02-11.zip
+          unzip iso3166-1-boundaries.shp-2021-02-11.zip
+          curl -OL https://volkerkrause.eu/~vkrause/iso3166-boundaries/iso3166-2-boundaries.shp-2021-02-11.zip
+          unzip iso3166-2-boundaries.shp-2021-02-11.zip
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: |
+          npm install
+          cd ./data/src
+          npm install
+
+      - name: Generate map
+        run: |
+          cd ./data/src
+          sh generate.sh
+
+      - name: Generate webapps
+        run: |
+          npx vite build
