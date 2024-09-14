@@ -10,5 +10,6 @@ export default defineConfig({
             "../../images/icons": "uikit/src/images/icons"
         }
     },
-    publicDir: "./public"
+    publicDir: "./public",
+    base: "./"
 });
