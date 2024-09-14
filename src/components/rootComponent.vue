@@ -118,7 +118,6 @@ export default defineComponent({
 
         if (data == null) {
             data = createNewUserData();
-            console.debug("Initial data is empty");
         }
 
         const userData = ref(data);

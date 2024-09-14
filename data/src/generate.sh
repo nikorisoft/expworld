@@ -2,7 +2,7 @@
 
 SIMPLIFY_RATIO="5%"
 SRC_DIR=`dirname "$0"`
-DEST_DIR="${SRC_DIR}/../../src/assets"
+DEST_DIR="${SRC_DIR}/../../public/maps"
 
 mkdir -p ${DEST_DIR}
 
@@ -19,3 +19,5 @@ done
 
 mkdir -p ${DEST_DIR}/geojson
 node ${SRC_DIR}/divide-features.js ${DEST_DIR}/3166-2.geojson ${DEST_DIR}/geojson
+
+rm -f ${DEST_DIR}/3166-2.geojson

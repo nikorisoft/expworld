@@ -1,5 +1,4 @@
 import { Feature } from "geojson";
-import countriesGeoJson from "../assets/3166-1.geojson";
 import { countryData } from "./area";
 
 export type CodeFeatureMap = {
@@ -9,28 +8,37 @@ export type CodeFeatureMap = {
     }
 };
 
-if (countriesGeoJson.features == null) {
-    throw new Error("GeoJson data invalid");
-}
-
 export const countryFeatures: CodeFeatureMap = {};
-
-for (const f of countriesGeoJson.features) {
-    if (f != null && f.properties != null && f.properties["ISO3166-1"] != null) {
-        const code = f.properties["ISO3166-1"] as string;
-        if (countryData[code] != null) {
-            countryFeatures[code] = {
-                name: countryData[code].name,
-                feature: f
-            };
-        } else {
-            console.log("Excluding %s", code);
-        }
-    } else {
-        console.log("No ISO3166-1");
-    }
-}
 
 export function getCountryFeature(code: string): Feature {
     return countryFeatures[code].feature;
+}
+
+export async function initGeoData() {
+    const infoResponse = await fetch("./maps/3166-1.geojson");
+
+    if (!infoResponse.ok) {
+        console.error("Cannot retrieve world map");
+        return;
+    }
+
+    const countriesGeoJson = await infoResponse.json();
+
+    if (countriesGeoJson.features == null) {
+        throw new Error("GeoJson data invalid");
+    }
+
+    for (const f of countriesGeoJson.features) {
+        if (f != null && f.properties != null && f.properties["ISO3166-1"] != null) {
+            const code = f.properties["ISO3166-1"] as string;
+            if (countryData[code] != null) {
+                countryFeatures[code] = {
+                    name: countryData[code].name,
+                    feature: f
+                };
+            }
+        } else {
+            console.log("No ISO3166-1");
+        }
+    }
 }

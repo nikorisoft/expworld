@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { Feature, FeatureCollection } from "geojson";
+import type { Feature, FeatureCollection } from "geojson";
 import L from "leaflet";
 import { defineComponent } from "vue";
 
