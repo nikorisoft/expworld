@@ -4,6 +4,7 @@
   "description": "Experience Points for World",
   "main": "index.js",
   "dependencies": {
+    "bson": "^6.8.0",
     "iso3166-2-db": "^2.3.11",
     "uikit": "^3.21.12",
     "vue": "^3.5.5",

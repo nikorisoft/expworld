@@ -52,6 +52,16 @@ export function createNewUserData(): UserData {
     return data;
 }
 
+export function validateUserData(userData: UserData): UserData {
+    for (const code in countryData) {
+        if (userData.countries[code] == null) {
+            userData.countries[code] = createEmptyCountryState();
+        }
+    }
+
+    return userData;
+}
+
 export function createEmptyCountryState(): UserCountryState {
     return {
         state: ExpState.None,

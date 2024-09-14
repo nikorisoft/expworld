@@ -11,5 +11,10 @@ export default defineConfig({
         }
     },
     publicDir: "./public",
-    base: "./"
+    base: "./",
+    optimizeDeps: {
+        esbuildOptions: {
+            target: "esnext"
+        }
+    }
 });

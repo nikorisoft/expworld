@@ -49,9 +49,11 @@
 </template>
 
 <script lang="ts">
+import { BSON } from "bson";
 import { defineComponent, ref } from "vue";
-import { createNewUserData, ExpState, UserData } from "../data/exp";
-import { downloadUserData, exportToBinary, importFromBinary, loadFromLocalStorage, saveToLocalStorage, uploadUserData } from "../data/save";
+import { createNewUserData, validateUserData, ExpState, UserData } from "../data/exp";
+import { downloadUserData, simplifyUserData, loadFromLocalStorage, saveToLocalStorage, uploadUserData } from "../data/save";
+import { toBase64, fromBase64 } from "../data/base64";
 
 import UIkit from "uikit";
 import Icons from "uikit/dist/js/uikit-icons";
@@ -102,12 +104,12 @@ export default defineComponent({
         if (window.location.search != null) {
             const params = new URLSearchParams(window.location.search);
 
-            const d = params.get("d");
+            const d = params.get("b");
             if (d != null) {
                 try {
-                    const buffer = Buffer.from(d, "base64");
+                    const userDataBSON = fromBase64(d);
 
-                    data = importFromBinary(buffer);
+                    data = validateUserData(BSON.deserialize(userDataBSON) as UserData);
 
                     console.debug("Initial data is originated from the query parameter.", data);
                 } catch (e) {
@@ -150,10 +152,13 @@ export default defineComponent({
             },
 
             async getLink() {
-                const buffer = exportToBinary(userData.value);
-                const base64str = buffer.toString("base64");
+                const simplified = simplifyUserData(userData.value);
+
+                const userDataBSON = BSON.serialize(simplified);
+                const base64str = toBase64(userDataBSON);
+
                 const url = window.location;
-                const newUrl = url.protocol + "//" + url.host + url.pathname + "?d=" + base64str;
+                const newUrl = url.protocol + "//" + url.host + url.pathname + "?b=" + base64str;
 
                 try {
                     await navigator.clipboard.writeText(newUrl);
@@ -169,8 +174,8 @@ export default defineComponent({
                 }
             },
 
-            copyrightYear: "2021",
-            copyrightVersion: "0.1.0"
+            copyrightYear: "2021-2024",
+            copyrightVersion: "0.2.0"
         }
     }
 });

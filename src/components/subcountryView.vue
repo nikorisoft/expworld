@@ -84,7 +84,7 @@ export default defineComponent({
                     stateData[code] = { state: ExpState.None };
                 }
             }
-            console.log(stateData);
+
             return stateData;
         },
 
